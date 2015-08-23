@@ -1,0 +1,63 @@
+#!/usr/bin/make -f
+
+export REPACK_SH=$(CURDIR)/debian/repack.sh
+
+INSTDIR = debian/tmp
+PY3VERS = $(shell py3versions -dv)
+SRC_VER = $(shell uscan --report | grep blender-.* | sed 's/^.*-//' | sed 's/\.tar.*$$//')
+
+ifeq ($(DEB_HOST_ARCH),i386)
+	SETSSE = OFF
+else
+	SETSSE = ON
+endif
+
+get-orig-source:
+	uscan --force-download --repack --compression xz
+	$(REPACK_SH) --upstream-version $(SRC_VER) ../blender_$(SRC_VER).orig.tar.xz
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_SKIP_RPATH=ON \
+		-DCMAKE_VERBOSE_MAKEFILE=ON \
+		-DFREETYPE_INCLUDE_DIRS="/usr/include/freetype2" \
+		-DPYTHON_VERSION=$(PY3VERS) \
+		-DWITH_CODEC_FFMPEG=ON \
+		-DWITH_CODEC_SNDFILE=ON \
+		-DWITH_CPU_SSE=$(SETSSE) \
+		-DWITH_CYCLES=ON \
+		-DWITH_DOC_MANPAGE=ON \
+		-DWITH_FFTW3=ON \
+		-DWITH_FONTCONFIG=ON \
+		-DWITH_GAMEENGINE=ON \
+		-DWITH_IMAGE_OPENJPEG=ON \
+		-DWITH_INPUT_NDOF=ON \
+		-DWITH_INSTALL_PORTABLE=OFF \
+		-DWITH_JACK=ON \
+		-DWITH_MOD_OCEANSIM=ON \
+		-DWITH_OPENCOLORIO=ON \
+		-DWITH_PLAYER=ON \
+		-DWITH_PYTHON_INSTALL=OFF \
+		-DWITH_SYSTEM_OPENJPEG=ON
+
+override_dh_auto_install:
+	dh_auto_install --buildsystem=cmake
+	find $(INSTDIR)/usr/share/blender/ -type d -empty -delete
+	rm $(INSTDIR)/usr/share/doc/blender/LICENSE-droidsans.ttf.txt
+	rm $(INSTDIR)/usr/share/doc/blender/LICENSE-bmonofont-i18n.ttf.txt
+	rm $(INSTDIR)/usr/share/doc/blender/LICENSE-bfont.ttf.txt
+	rm $(INSTDIR)/usr/share/doc/blender/GPL-license.txt
+	rm $(INSTDIR)/usr/share/doc/blender/Python-license.txt
+	rm $(INSTDIR)/usr/share/doc/blender/readme.html
+
+override_dh_install:
+	dh_install --fail-missing --list-missing
+
+override_dh_strip:
+	dh_strip --dbg-package=blender-dbg
+
+override_dh_auto_test:
+
+%:
+	dh $@ --buildsystem=cmake --parallel --with python3

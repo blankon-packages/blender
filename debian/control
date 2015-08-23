@@ -1,0 +1,102 @@
+Source: blender
+Section: graphics
+Priority: optional
+Maintainer: Debian Multimedia Maintainers <pkg-multimedia-maintainers@lists.alioth.debian.org>
+Uploaders: Alessio Treglia <alessio@debian.org>,
+           Matteo F. Vescovi <mfv@debian.org>
+Build-Depends: autotools-dev,
+               cmake,
+               debhelper (>= 9),
+               gettext,
+               libalut-dev,
+               libavcodec-dev (>> 6:10),
+               libavdevice-dev,
+               libavformat-dev,
+               libboost-dev,
+               libboost-filesystem-dev,
+               libboost-locale-dev,
+               libboost-regex-dev,
+               libboost-system-dev,
+               libboost-thread-dev,
+               libfftw3-dev,
+               libgettextpo-dev,
+               libglew-dev,
+               libgsm1-dev,
+               libjack-dev,
+               libjemalloc-dev,
+               libjpeg-dev,
+               liblzma-dev,
+               liblzo2-dev,
+               libopenal-dev,
+               libopencolorio-dev,
+               libopenexr-dev,
+               libopenimageio-dev,
+               libopenjpeg-dev,
+               libpng-dev,
+               libsdl-dev,
+               libsndfile-dev,
+               libspnav-dev,
+               libswscale-dev,
+               libtiff-dev,
+               libvorbis-dev,
+               libxi-dev,
+               libz-dev,
+               libfontconfig-dev,
+               pkg-config,
+               python3-dev,
+               python3-requests
+X-Python3-Version: >= 3.3
+Build-Conflicts: nvidia-glx
+Standards-Version: 3.9.6
+Homepage: http://www.blender.org/
+Vcs-Git: git://anonscm.debian.org/pkg-multimedia/blender.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-multimedia/blender.git
+
+Package: blender
+Architecture: any
+Depends: blender-data (= ${source:Version}),
+         fonts-droid,
+         libjs-jquery,
+         libjs-jquery-ui,
+         ${misc:Depends},
+         ${python3:Depends},
+         ${shlibs:Depends}
+Description: Very fast and versatile 3D modeller/renderer
+ Blender is an integrated 3d suite for modelling, animation, rendering,
+ post-production, interactive creation and playback (games). Blender has its
+ own particular user interface, which is implemented entirely in OpenGL and
+ designed with speed in mind. Python bindings are available for scripting;
+ import/export features for popular file formats like 3D Studio and Wavefront
+ Obj are implemented as scripts by the community. Stills, animations, models
+ for games or other third party engines and interactive content in the form of
+ a standalone binary are common products of Blender use.
+
+Package: blender-data
+Architecture: all
+Depends: python3,
+         ${misc:Depends},
+         ${python3:Depends}
+Replaces: blender (<< 2.67b-1~)
+Description: Very fast and versatile 3D modeller/renderer - data package
+ Blender is an integrated 3d suite for modelling, animation, rendering,
+ post-production, interactive creation and playback (games). Blender has its
+ own particular user interface, which is implemented entirely in OpenGL and
+ designed with speed in mind. Python bindings are available for scripting;
+ import/export features for popular file formats like 3D Studio and Wavefront
+ Obj are implemented as scripts by the community. Stills, animations, models
+ for games or other third party engines and interactive content in the form of
+ a standalone binary are common products of Blender use.
+ .
+ This package contains documentation, libraries and images for blender.
+
+Package: blender-dbg
+Architecture: any
+Section: debug
+Priority: extra
+Depends: blender (= ${binary:Version}),
+         ${misc:Depends}
+Description: Very fast and versatile 3D modeller/renderer - debug package
+ Blender is an integrated 3d suite for modelling, animation, rendering,
+ post-production, interactive creation and playback (games).
+ .
+ This package contains debug symbols to produce useful backtraces.
